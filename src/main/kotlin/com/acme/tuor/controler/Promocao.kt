@@ -11,10 +11,6 @@ class PromocaoController {
     @Autowired
     lateinit var promocoes: ConcurrentHashMap<Long, Promocao>
 
-    @RequestMapping(
-        value = ["/sayHello"],
-        method = arrayOf(RequestMethod.GET)
-    )
     fun sayHello(): String {
         return "Hello world"
     }
@@ -41,4 +37,11 @@ class PromocaoController {
         promocoes.remove(id)
         promocoes[id] = promocao
     }
+
+    @RequestMapping(value = ["/promocoes"], method = arrayOf(RequestMethod.GET))
+    fun getAll(@RequestParam(required = false, defaultValue = "") localFilter: String) =
+        promocoes.filter {
+            it.value.local.contains(localFilter, true)
+        }.map(Map.Entry<Long, Promocao>::value).toList()
+
 }
