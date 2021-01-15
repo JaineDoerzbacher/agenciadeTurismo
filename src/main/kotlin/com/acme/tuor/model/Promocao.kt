@@ -1,6 +1,7 @@
 package com.acme.tuor.model
 
 data class Promocao(
+
     val id: Long,
     val descricao: String,
     val local: String,
