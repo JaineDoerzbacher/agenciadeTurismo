@@ -1,47 +1,41 @@
 package com.acme.tuor.service.Impl
 
 import com.acme.tuor.model.Promocao
+import com.acme.tuor.repository.PromocaoREpository
 import com.acme.tuor.service.PromocaoService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
 
 @Component
 class PromocaoServiceImpl : PromocaoService {
 
-    companion object {
 
-        val initialPromocoes = arrayOf(
-            Promocao(1, "Maravilhosa viagem a Cancun", "Cancun", true, 7, 4328.99),
-            Promocao(2, "Viagem radical com rapel e escalada", "Nova Zelândia", false, 12, 12000.0),
-            Promocao(3, "Viagem espiritual", "Thailandia", false, 17, 15000.0),
-            Promocao(4, "Viagem para a família", "Gramado", false, 5, 3499.99)
-
-        )
-    }
-
-    var promocoes = ConcurrentHashMap<Long, Promocao>(initialPromocoes.associateBy(Promocao::id))
+    @Autowired
+    lateinit var promocaoRepository: PromocaoREpository
 
     override fun create(promocao: Promocao) {
-        promocoes[promocao.id] = promocao
+        this.promocaoRepository.save(promocao)
     }
 
 
     override fun getById(id: Long): Promocao? {
-        return promocoes[id]
+        return promocaoRepository.findById(id).orElseGet(null)
     }
 
     override fun delete(id: Long) {
-        promocoes.remove(id)
+        this.promocaoRepository.delete(Promocao(id= id))
     }
 
     override fun update(id: Long, promocao: Promocao) {
-        delete(id)
-        promocoes[id] = promocao
+       create(promocao)
     }
 
     override fun searchByLocal(local: String): List<Promocao> =
-        promocoes.filter {
-            it.value.local.contains(local, true)
-        }.map(Map.Entry<Long, Promocao>::value).toList()
+        listOf()
+
+    override fun getAll(): List<Promocao> {
+       return this.promocaoRepository.findAll()
+    }
 
 }
