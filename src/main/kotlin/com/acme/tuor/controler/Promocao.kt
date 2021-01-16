@@ -12,15 +12,11 @@ class PromocaoController {
     @Autowired
     lateinit var promocoes: ConcurrentHashMap<Long, Promocao>
 
-    fun sayHello(): String {
-        return "Hello world"
-    }
-
     @GetMapping("/{id}")
     fun getPromocao(@PathVariable id: Long) = promocoes[id]
 
 
-    @PostMapping("/promocoes")
+    @PostMapping()
     fun create(@RequestBody promocao: Promocao) {
         promocoes[promocao.id] = promocao
     }
@@ -36,7 +32,7 @@ class PromocaoController {
         promocoes[id] = promocao
     }
 
-    @GetMapping("/promocoes")
+    @GetMapping()
     fun getAll(@RequestParam(required = false, defaultValue = "") localFilter: String) =
         promocoes.filter {
             it.value.local.contains(localFilter, true)
