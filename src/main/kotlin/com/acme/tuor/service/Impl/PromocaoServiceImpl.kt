@@ -2,8 +2,10 @@ package com.acme.tuor.service.Impl
 
 import com.acme.tuor.model.Promocao
 import com.acme.tuor.service.PromocaoService
+import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
 
+@Component
 class PromocaoServiceImpl : PromocaoService {
 
     companion object {
