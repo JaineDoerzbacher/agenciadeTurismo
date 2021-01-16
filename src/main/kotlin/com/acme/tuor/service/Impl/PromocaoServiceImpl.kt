@@ -4,6 +4,8 @@ import com.acme.tuor.model.Promocao
 import com.acme.tuor.repository.PromocaoREpository
 import com.acme.tuor.service.PromocaoService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
 
@@ -24,7 +26,7 @@ class PromocaoServiceImpl : PromocaoService {
     }
 
     override fun delete(id: Long) {
-        this.promocaoRepository.delete(Promocao(id= id))
+        this.promocaoRepository.deleteById(id)
     }
 
     override fun update(id: Long, promocao: Promocao) {
@@ -34,8 +36,13 @@ class PromocaoServiceImpl : PromocaoService {
     override fun searchByLocal(local: String): List<Promocao> =
         listOf()
 
-    override fun getAll(): List<Promocao> {
-       return this.promocaoRepository.findAll()
+    override fun getAll(start: Int, size: Int): List<Promocao> {
+        val pages: Pageable = PageRequest.of(start, size)
+        return this.promocaoRepository.findAll(pages).toList()
     }
+
+    override fun count(): Long =
+        this.promocaoRepository.count()
+
 
 }
