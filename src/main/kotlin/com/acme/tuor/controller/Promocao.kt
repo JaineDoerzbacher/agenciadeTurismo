@@ -70,7 +70,7 @@ class PromocaoController {
         @RequestParam(required = false, defaultValue = "3") size: Int,
     ): ResponseEntity<List<Promocao>> {
 
-        val list =this.promocaoService.getAll(start, size)
+        val list = this.promocaoService.getAll(start, size)
         val status = if (list.size == 0) HttpStatus.NOT_FOUND else HttpStatus.OK
 
         return ResponseEntity(list, status)
@@ -80,4 +80,6 @@ class PromocaoController {
     fun count(): ResponseEntity<Map<String, Long>> =
         ResponseEntity.ok().body(mapOf("count" to this.promocaoService.count()))
 
+    @GetMapping("/ordenados")
+    fun ordenados() = this.promocaoService.getAllSortedByLocal()
 }
