@@ -1,5 +1,7 @@
-package com.acme.tuor.controler
+package com.acme.tuor.controller
 
+import com.acme.tuor.excepcion.PromocaoNotFoundExcepcion
+import com.acme.tuor.model.ErrorMessage
 import com.acme.tuor.model.Promocao
 import com.acme.tuor.model.RespostaJSON
 import com.acme.tuor.service.PromocaoService
@@ -8,7 +10,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 
 @RestController
 @RequestMapping(value = ["/promocoes"])
@@ -19,11 +20,16 @@ class PromocaoController {
     lateinit var promocaoService: PromocaoService
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): ResponseEntity<Promocao?> {
+    fun getById(@PathVariable id: Long): ResponseEntity<Any> {
 
         var promocao = this.promocaoService.getById(id)
-        var status = if (promocao == null) HttpStatus.NOT_FOUND else HttpStatus.OK
-        return ResponseEntity(promocao, status)
+
+        return if (promocao != null)
+            return ResponseEntity(promocao, HttpStatus.OK)
+        else return ResponseEntity(
+            ErrorMessage("Promocao nao localizada", "Promocao ${id} nao localizada"),
+            HttpStatus.NOT_FOUND
+        )
     }
 
 
@@ -47,10 +53,10 @@ class PromocaoController {
     }
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody promocao: Promocao): ResponseEntity<Unit>{
+    fun update(@PathVariable id: Long, @RequestBody promocao: Promocao): ResponseEntity<Unit> {
 
         var status = HttpStatus.NOT_FOUND
-        if (this.promocaoService.getById(id) != null){
+        if (this.promocaoService.getById(id) != null) {
             this.promocaoService.update(id, promocao)
             status = HttpStatus.ACCEPTED
         }
@@ -61,9 +67,9 @@ class PromocaoController {
     @GetMapping()
     fun getAll(@RequestParam(required = false, defaultValue = "") localFilter: String): ResponseEntity<List<Promocao>> {
 
-        var status =  HttpStatus.OK
+        var status = HttpStatus.OK
         var listaPromocoes = this.promocaoService.searchByLocal(localFilter)
-        if (listaPromocoes.size == 0){
+        if (listaPromocoes.size == 0) {
 
             status = HttpStatus.NOT_FOUND
         }
