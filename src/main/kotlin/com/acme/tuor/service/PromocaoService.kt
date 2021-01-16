@@ -11,4 +11,5 @@ interface PromocaoService {
     fun getAll(start: Int, size: Int): List<Promocao>
     fun count(): Long
     fun getAllSortedByLocal(): List<Promocao>
+    fun getAllByPrecoMenorQue9000(): List<Promocao>
 }

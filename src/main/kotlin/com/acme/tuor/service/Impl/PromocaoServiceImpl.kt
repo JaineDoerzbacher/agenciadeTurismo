@@ -31,7 +31,7 @@ class PromocaoServiceImpl : PromocaoService {
     }
 
     override fun update(id: Long, promocao: Promocao) {
-       create(promocao)
+        create(promocao)
     }
 
     override fun searchByLocal(local: String): List<Promocao> =
@@ -46,8 +46,11 @@ class PromocaoServiceImpl : PromocaoService {
         this.promocaoRepository.count()
 
     override fun getAllSortedByLocal(): List<Promocao> =
-        this.promocaoRepository.findAll(Sort.by("local" ).descending()).toList()
+        this.promocaoRepository.findAll(Sort.by("local").descending()).toList()
 
+    override fun getAllByPrecoMenorQue9000(): List<Promocao> {
+        return this.promocaoRepository.findByPrecoMenorQue(9000.99, 5)
+    }
 
 
 }

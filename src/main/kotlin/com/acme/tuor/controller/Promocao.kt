@@ -19,6 +19,12 @@ class PromocaoController {
 
     lateinit var promocaoService: PromocaoService
 
+
+    @GetMapping("/menorQue9000")
+    fun getAllMenores() =
+        this.promocaoService.getAllByPrecoMenorQue9000()
+
+
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Long): ResponseEntity<Any> {
 
